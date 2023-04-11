@@ -1,27 +1,17 @@
-from src.models import *
-from flask import Flask, request, jsonify
-from flask_cors import CORS, cross_origin
-from flask_jwt_extended import JWTManager
+from flask import Flask
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
-from flask_migrate import Migrate
-from datetime import timedelta
 import os
-import glob
-import importlib
 from flask_migrate import Migrate, upgrade, init
-import cx_Oracle
 
 
 app = Flask(__name__)
 CORS(app)
 
-
-jwt = JWTManager(app)
-
-
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 
 convention = {
     "ix": 'ix_%(column_0_label)s',

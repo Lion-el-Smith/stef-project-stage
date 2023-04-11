@@ -1,8 +1,5 @@
-from src.models.car_model import db, CarModel
+from src.models.car_model import CarModel, db
 from src.stef_project.DTO.car_DTO import carDTO
-from werkzeug.exceptions import BadRequest
-from src.stef_project.enums.exceptionMessages import UserExceptions
-import sqlite3
 
 
 class CarRepo():
@@ -16,11 +13,9 @@ class CarRepo():
                            hours_parked=hrs_parked,
                            Price=Price
                            )
-        db.session.add(new_car)
-        db.session.commit()
-        car: CarModel = CarModel.query.filter(
-            CarModel.license_plate == license_plate).first()
-        car_DTO = carDTO(car.license_plate, car.car_color, car.is_dirty, car.hrs_parked, car.price)
+        self.db.session.add(new_car)
+        self.db.session.commit()
+        car_DTO = carDTO(new_car.license_plate, new_car.car_color, new_car.is_dirty, new_car.hrs_parked, new_car.price)
         return car_DTO
 
     def update_car(self, license_plate, car_color, is_dirty, hours_parked,  price):
@@ -35,10 +30,10 @@ class CarRepo():
         car_DTO = carDTO(car.license_plate, car.car_color, car.is_dirty, car.hrs_parked, car.price)
         return car_DTO
 
-    def remove_car(license_plate) -> None:
+    def remove_car(self, license_plate) -> None:
         car = CarModel.query.filter(
             CarModel.license_plate == license_plate).delete()
-        db.session.commit()
+        self.db.session.commit()
 
     def find_car(self, license_plate) -> carDTO:
         car: CarModel = CarModel.query.filter(

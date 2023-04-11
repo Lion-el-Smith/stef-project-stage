@@ -1,21 +1,27 @@
-import importlib
-from flask import Flask, json
-from config import Flasks
-import distutils
-from distutils import util
-import glob
-import importlib
 import os
+import sys
+import importlib
+from flask import Flask
+from config import Flasks
+import glob
 from flask import request, jsonify
 from src.stef_project.car_service import CarService
+from pathlib import Path
+
+home_path = Path(__file__).parent.resolve()
+ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
+basedir = os.path.abspath(os.path.dirname(__file__))
+os.environ.update({'ROOT_PATH': ROOT_PATH})
+sys.path.append(os.path.join(ROOT_PATH, 'src'))
+
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+ os.path.join(basedir, 'data.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 @app.route('/')
 def hello_world():
-    return 'Hello, World!'
+    return jsonify('Hello, World!'), 200
 
 @app.route('/car/<license_plate>', methods=['GET'])
 def get_car(license_plate):
@@ -63,10 +69,11 @@ def add_car():
     )
     return jsonify(car), 200
 
+
 if __name__ == '__main__':
-    from db import db
+    from src import db
     db.init_app(app)
-    app.run(host=Flasks.host, port=Flasks.port,debug=True)#sdsfubsfjhbkfbsfsfs
+    app.run(host=Flasks.host, port=Flasks.port,debug=True)
 
 for f in glob.glob(os.path.dirname(__file__) + "/**/*_controller.py",recursive=True):
     spec = importlib.util.spec_from_file_location(os.path.basename(f)[:-3],f)

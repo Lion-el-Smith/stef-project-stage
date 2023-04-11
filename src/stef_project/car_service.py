@@ -1,5 +1,3 @@
-from src import app
-from flask import request, jsonify, request
 from werkzeug.exceptions import BadRequest
 from src.stef_project.DTO.car_DTO import carDTO
 from src.stef_project.enums.exceptionMessages import UserExceptions

@@ -1,5 +1,5 @@
 import sqlite3
-from db import db
+from src import db
 
 
 class CarModel(db.Model):
